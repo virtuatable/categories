@@ -4,7 +4,7 @@ module Controllers
   class Categories < Arkaan::Utils::Controller
     declare_route 'get', '/' do
       categories = Decorators::Category.decorate_collection(Arkaan::Permissions::Category.all)
-      halt 200, {count: Arkaan::Permissions::Right.all.count, items: categories.map(&:to_h)}.to_json
+      halt 200, {count: Arkaan::Permissions::Category.count, items: categories.map(&:to_h)}.to_json
     end
 
     declare_route 'delete', '/:id' do
