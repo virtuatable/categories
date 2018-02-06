@@ -38,7 +38,7 @@ RSpec.describe Controllers::Categories do
               'id' => category.id.to_s,
               'slug' => 'test_category',
               'count' => 1,
-              'items' => [{
+              'rights' => [{
                 'id' => right.id.to_s,
                 'slug' => 'test_right',
                 'groups' => 1
@@ -48,7 +48,7 @@ RSpec.describe Controllers::Categories do
               'id' => other_category.id.to_s,
               'slug' => 'other_category',
               'count' => 1,
-              'items' => [{
+              'rights' => [{
                 'id' => other_right.id.to_s,
                 'slug' => 'another_random_right',
                 'groups' => 0
