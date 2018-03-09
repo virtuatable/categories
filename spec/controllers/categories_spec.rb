@@ -17,18 +17,19 @@ RSpec.describe Controllers::Categories do
 
   describe 'GET /' do
     describe 'in the nominal case' do
-      let!(:other_category) { create(:category, slug: 'other_category') }
+      let!(:other_category) { create(:other_category, slug: 'other_category') }
       let!(:other_right) { create(:right, slug: 'another_random_right', groups: [], category: other_category) }
 
       before do
         get '/', {app_key: 'test_key', token: 'test_token'}
       end
-      it 'gives the correct status code when obtaining a right' do
-        expect(last_response.status).to be 200
-      end
-      describe 'response parameters' do
+
+      describe 'Nominal case' do
         let!(:body) { JSON.parse(last_response.body) }
 
+        it 'gives the correct status code when obtaining a right' do
+          expect(last_response.status).to be 200
+        end
         it 'Returns the right counts for the rights list' do
           expect(body['count']).to be 2
         end
@@ -57,58 +58,13 @@ RSpec.describe Controllers::Categories do
           ])
         end
       end
-    end
-    describe 'bad request errors' do
-      describe 'no token error' do
-        before do
-          get '/', {app_key: 'test_key'}
-        end
-        it 'Raises a bad request (400) error when the parameters don\'t contain the token of the gateway' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns the correct response if the parameters do not contain a gateway token' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.token'})
-        end
-      end
-      describe 'no application key error' do
-        before do
-          get '/', {token: 'test_token'}
-        end
-        it 'Raises a bad request (400) error when the parameters don\'t contain the application key' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns the correct response if the parameters do not contain a application key' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.app_key'})
-        end
-      end
-    end
-    describe 'not_found errors' do
-      describe 'application not found' do
-        before do
-          get '/', {token: 'test_token', app_key: 'another_key'}
-        end
-        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'application_not_found'})
-        end
-      end
-      describe 'gateway not found' do
-        before do
-          get '/', {token: 'other_token', app_key: 'test_key'}
-        end
-        it 'Raises a not found (404) error when the gateway does\'nt exist' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'gateway_not_found'})
-        end
-      end
+
+      it_should_behave_like 'a route', 'get', '/'
     end
   end
+
   describe 'POST /' do
-    describe 'in the nominal case' do
+    describe 'Nominal case' do
       before do
         post '/', {app_key: 'test_key', token: 'test_token', slug: 'test_other_category'}
       end
@@ -119,6 +75,10 @@ RSpec.describe Controllers::Categories do
         expect(JSON.parse(last_response.body)).to eq({'message' => 'created'})
       end
     end
+
+    it_should_behave_like 'a route', 'post', '/'
+
+
     describe 'bad request errors' do
       describe 'slug not given error' do
         before do
@@ -131,54 +91,9 @@ RSpec.describe Controllers::Categories do
           expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.slug'})
         end
       end
-      describe 'no token error' do
-        before do
-          post '/', {app_key: 'test_key', slug: 'test_category_two'}.to_json
-        end
-        it 'Raises a bad request (400) error when the parameters don\'t contain the token of the gateway' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns the correct response if the parameters do not contain a gateway token' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.token'})
-        end
-      end
-      describe 'no application key error' do
-        before do
-          post '/', {token: 'test_token', slug: 'test_category_two'}.to_json
-        end
-        it 'Raises a bad request (400) error when the parameters don\'t contain the application key' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns the correct response if the parameters do not contain a application key' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.app_key'})
-        end
-      end
-    end
-    describe 'not_found errors' do
-      describe 'application not found' do
-        before do
-          post '/', {token: 'test_token', app_key: 'another_key', slug: 'test_category_two'}.to_json
-        end
-        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'application_not_found'})
-        end
-      end
-      describe 'gateway not found' do
-        before do
-          post '/', {token: 'other_token', app_key: 'test_key', slug: 'test_category_two'}.to_json
-        end
-        it 'Raises a not found (404) error when the gateway does\'nt exist' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'gateway_not_found'})
-        end
-      end
     end
   end
+
   describe 'DELETE /:id' do
     describe 'the nominal case' do
       before do
@@ -197,30 +112,9 @@ RSpec.describe Controllers::Categories do
         expect(Arkaan::Permissions::Right.all.count).to be 0
       end
     end
-    describe 'bad request errors' do
-      describe 'no token error' do
-        before do
-          delete "/#{category.id.to_s}", {app_key: 'test_key'}
-        end
-        it 'Raises a bad request (400) error when the parameters don\'t contain the token of the gateway' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns the correct response if the parameters do not contain a gateway token' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.token'})
-        end
-      end
-      describe 'no application key error' do
-        before do
-          delete "/#{category.id.to_s}", {token: 'test_token'}
-        end
-        it 'Raises a bad request (400) error when the parameters don\'t contain the application key' do
-          expect(last_response.status).to be 400
-        end
-        it 'returns the correct response if the parameters do not contain a application key' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.app_key'})
-        end
-      end
-    end
+
+    it_should_behave_like 'a route', 'delete', '/category_id'
+
     describe 'not_found errors' do
       describe 'category not found' do
         before do
@@ -231,28 +125,6 @@ RSpec.describe Controllers::Categories do
         end
         it 'returns the correct body when the category doesn\'t exist' do
           expect(JSON.parse(last_response.body)).to eq({'message' => 'category_not_found'})
-        end
-      end
-      describe 'application not found' do
-        before do
-          delete "/#{category.id.to_s}", {token: 'test_token', app_key: 'another_key'}
-        end
-        it 'Raises a not found (404) error when the key doesn\'t belong to any application' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'application_not_found'})
-        end
-      end
-      describe 'gateway not found' do
-        before do
-          delete "/#{category.id.to_s}", {token: 'other_token', app_key: 'test_key'}
-        end
-        it 'Raises a not found (404) error when the gateway does\'nt exist' do
-          expect(last_response.status).to be 404
-        end
-        it 'returns the correct body when the gateway doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'gateway_not_found'})
         end
       end
     end
