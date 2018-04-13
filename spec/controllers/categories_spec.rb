@@ -78,7 +78,6 @@ RSpec.describe Controllers::Categories do
 
     it_should_behave_like 'a route', 'post', '/'
 
-
     describe 'bad request errors' do
       describe 'slug not given error' do
         before do
@@ -88,7 +87,12 @@ RSpec.describe Controllers::Categories do
           expect(last_response.status).to be 400
         end
         it 'returns the correct response if the parameters do not contain a slug' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'missing.slug'})
+          expect(JSON.parse(last_response.body)).to eq({
+            'status' => 400,
+            'field' => 'slug',
+            'error' => 'required',
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Categories-API#slug-not-given'
+          })
         end
       end
     end
@@ -124,7 +128,12 @@ RSpec.describe Controllers::Categories do
           expect(last_response.status).to be 404
         end
         it 'returns the correct body when the category doesn\'t exist' do
-          expect(JSON.parse(last_response.body)).to eq({'message' => 'category_not_found'})
+          expect(JSON.parse(last_response.body)).to eq({
+            'status' => 404,
+            'field' => 'category_id',
+            'error' => 'unknown',
+            'docs' => 'https://github.com/jdr-tools/wiki/wiki/Categories-API#category-id-not-found'
+          })
         end
       end
     end

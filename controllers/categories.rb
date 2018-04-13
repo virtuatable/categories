@@ -3,14 +3,16 @@ module Controllers
   # @author Vincent Courtois <courtois.vincent@outlook.com>
   class Categories < Arkaan::Utils::Controller
 
+    load_errors_from __FILE__
+
     # @see https://github.com/jdr-tools/categories/wiki/Creation-of-a-category
     declare_route 'post', '/' do
-      check_presence 'slug'
+      check_presence 'slug', route: 'creation'
       category = Arkaan::Permissions::Category.new(slug: params['slug'])
       if category.save
         halt 201, {message: 'created'}.to_json
       else
-        halt 422, {errors: category.errors.messages.values.flatten}.to_json
+        model_error category, 'creation'
       end
     end
 
@@ -18,7 +20,7 @@ module Controllers
     declare_route 'delete', '/:id' do
       category = Arkaan::Permissions::Category.where(id: params[:id]).first
       if category.nil?
-        halt 404, {message: 'category_not_found'}.to_json
+        custom_error 404, 'deletion.category_id.unknown'
       else
         category.rights.delete_all if category.rights.any?
         category.delete

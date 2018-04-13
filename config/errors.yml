@@ -1,0 +1,18 @@
+errors:
+  common:
+    app_key:
+      forbidden: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-not-premium'
+      required: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-key-not-given'
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#application-key-not-found'
+    token:
+      required: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-given'
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Common-errors#gateway-token-not-found'
+  creation:
+    slug:
+      minlength: 'https://github.com/jdr-tools/wiki/wiki/Categories-API#slug-too-short'
+      pattern: 'https://github.com/jdr-tools/wiki/wiki/Categories-API#slug-with-wrong-format'
+      required: 'https://github.com/jdr-tools/wiki/wiki/Categories-API#slug-not-given'
+      uniq: 'https://github.com/jdr-tools/wiki/wiki/Categories-API#slug-already-taken'
+  deletion:
+    category_id:
+      unknown: 'https://github.com/jdr-tools/wiki/wiki/Categories-API#category-id-not-found'
