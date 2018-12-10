@@ -21,7 +21,7 @@ RSpec.describe Controllers::Categories do
       let!(:other_right) { create(:right, slug: 'another_random_right', groups: [], category: other_category) }
 
       before do
-        get '/', {app_key: 'test_key', token: 'test_token'}
+        get '/categories', {app_key: 'test_key', token: 'test_token'}
       end
 
       describe 'Nominal case' do
@@ -59,14 +59,14 @@ RSpec.describe Controllers::Categories do
         end
       end
 
-      it_should_behave_like 'a route', 'get', '/'
+      it_should_behave_like 'a route', 'get', '/categories'
     end
   end
 
   describe 'POST /' do
     describe 'Nominal case' do
       before do
-        post '/', {app_key: 'test_key', token: 'test_token', slug: 'test_other_category'}
+        post '/categories', {app_key: 'test_key', token: 'test_token', slug: 'test_other_category'}
       end
       it 'gives the correct status code when successfully creating a right' do
         expect(last_response.status).to be 201
@@ -81,7 +81,7 @@ RSpec.describe Controllers::Categories do
     describe 'bad request errors' do
       describe 'slug not given error' do
         before do
-          post '/', {app_key: 'test_key', token: 'test_token'}
+          post '/categories', {app_key: 'test_key', token: 'test_token'}
         end
         it 'Raises a bad request (400) error when the parameters don\'t contain the slug' do
           expect(last_response.status).to be 400
@@ -101,7 +101,7 @@ RSpec.describe Controllers::Categories do
   describe 'DELETE /:id' do
     describe 'the nominal case' do
       before do
-        delete "/#{category.id.to_s}", {app_key: 'test_key', token: 'test_token'}
+        delete "/categories/#{category.id.to_s}", {app_key: 'test_key', token: 'test_token'}
       end
       it 'Returns a OK (200) status code when deleting a category' do
         expect(last_response.status).to be 200
@@ -117,12 +117,12 @@ RSpec.describe Controllers::Categories do
       end
     end
 
-    it_should_behave_like 'a route', 'delete', '/category_id'
+    it_should_behave_like 'a route', 'delete', '/categories/category_id'
 
     describe 'not_found errors' do
       describe 'category not found' do
         before do
-          delete "/anything", {token: 'test_token', app_key: 'test_key'}
+          delete "/categories/anything", {token: 'test_token', app_key: 'test_key'}
         end
         it 'Raises a not found (404) error when the category doesn\'t exist' do
           expect(last_response.status).to be 404
