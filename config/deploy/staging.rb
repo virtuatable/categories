@@ -1,0 +1,1 @@
+server '51.158.189.167', user: 'deploy', roles: %w{web}

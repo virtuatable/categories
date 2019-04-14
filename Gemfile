@@ -4,12 +4,15 @@ source 'https://rubygems.org'
 group :development, :production, :test do
   gem 'sinatra', '2.0.1' , require: 'sinatra/base'
   gem 'mongoid', '7.0.1'
-  gem 'arkaan' , '1.3.10'
+  gem 'arkaan' , '1.4.5'
   gem 'draper' , '3.0.1'
 end
 
 group :developement, :production do
   gem 'rake'
+  gem 'capistrano', '3.11.0'
+  gem 'capistrano-bundler', '1.5.0'
+  gem 'capistrano-rvm', '0.1.1'
 end
 
 group :development, :test do
