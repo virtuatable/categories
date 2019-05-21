@@ -1,7 +1,7 @@
 lock '~> 3.11.0'
 
-set :application, 'arkaan-categories'
-set :deploy_to, '/var/www/arkaan-categories'
+set :application, 'virtuadmin-categories'
+set :deploy_to, '/var/www/categories'
 
 set :repo_url, 'git@github.com:jdr-tools/categories.git'
 set :branch, 'master'
