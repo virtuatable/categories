@@ -1,7 +1,7 @@
 module Controllers
   # Controller for the categories of rights, mapped on /categories
   # @author Vincent Courtois <courtois.vincent@outlook.com>
-  class Categories < Arkaan::Utils::Controller
+  class Categories < Arkaan::Utils::Controllers::Checked
 
     load_errors_from __FILE__
 
