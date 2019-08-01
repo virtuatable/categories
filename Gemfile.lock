@@ -190,7 +190,7 @@ DEPENDENCIES
   rack-test (= 0.7.0)
   rake
   rspec (= 3.6.0)
-  rubocop
+  rubocop (= 0.73.0)
   simplecov (= 0.15.1)
   sinatra (= 2.0.5)
 

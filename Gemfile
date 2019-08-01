@@ -22,5 +22,5 @@ group :development, :test do
   gem 'simplecov'       , '0.15.1'
   gem 'database_cleaner', '1.6.1'
   gem 'bcrypt'          , '3.1.11'
-  gem 'rubocop'
+  gem 'rubocop'         , '0.73.0'
 end

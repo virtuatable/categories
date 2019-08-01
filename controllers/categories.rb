@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Controllers
   # Controller for the categories of rights, mapped on /categories
   # @author Vincent Courtois <courtois.vincent@outlook.com>
   class Categories < Arkaan::Utils::Controllers::Checked
-
     load_errors_from __FILE__
 
     # @see https://github.com/jdr-tools/categories/wiki/Creation-of-a-category
@@ -10,7 +11,7 @@ module Controllers
       check_presence 'slug', route: 'creation'
       category = Arkaan::Permissions::Category.new(slug: params['slug'])
       if category.save
-        halt 201, {message: 'created'}.to_json
+        halt 201, { message: 'created' }.to_json
       else
         model_error category, 'creation'
       end
@@ -24,14 +25,16 @@ module Controllers
       else
         category.rights.delete_all if category.rights.any?
         category.delete
-        halt 200, {message: 'deleted'}.to_json
+        halt 200, { message: 'deleted' }.to_json
       end
     end
 
     # @see https://github.com/jdr-tools/categories/wiki/Getting-the-list-of-categories
     declare_route 'get', '/' do
-      categories = Decorators::Category.decorate_collection(Arkaan::Permissions::Category.all)
-      halt 200, {count: Arkaan::Permissions::Category.count, items: categories.map(&:to_h)}.to_json
+      raw_categories = Arkaan::Permissions::Category.all
+      categories = Decorators::Category.decorate_collection(raw_categories)
+      count = Arkaan::Permissions::Category.count
+      halt 200, { count: count, items: categories.map(&:to_h) }.to_json
     end
   end
 end
