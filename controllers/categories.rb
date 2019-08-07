@@ -6,6 +6,8 @@ module Controllers
   class Categories < Arkaan::Utils::Controllers::Checked
     load_errors_from __FILE__
 
+    declare_status_route
+
     # @see https://github.com/jdr-tools/categories/wiki/Creation-of-a-category
     declare_route 'post', '/' do
       check_presence 'slug', route: 'creation'
